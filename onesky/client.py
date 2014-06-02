@@ -29,7 +29,8 @@ class Client:
             'dev_hash': dev_hash.hexdigest()
         }
 
-    def do_http_request(self, relative_url, parameters=None, method='GET'):
+    def do_http_request(self, relative_url, parameters=None, method='GET',
+                        file_stream=None):
         absolute_url = self.api_url + relative_url
 
         # the auth variables and any additional parameters are merged and
@@ -44,13 +45,20 @@ class Client:
                                    if v is not None])
         url_parameters.update(self.create_auth_variables())
 
+        if file_stream is not None:
+            files = {'file': file_stream}
+        else:
+            files = None
+
         if self.request_callback:
             self.request_callback(method, absolute_url, url_parameters)
 
         # method is something like GET or POST or DELETE, for which we grab the
         # appropriate function from the requests library.
         request_function = getattr(requests, method.lower())
-        response = request_function(absolute_url, params=url_parameters)
+        response = request_function(absolute_url,
+                                    params=url_parameters,
+                                    files=files)
 
         # some requests (such as project_group_delete) don't return any
         # response data, just the status code.
@@ -129,14 +137,18 @@ class Client:
         params = {'page': page, 'per_page': per_page}
         return self.do_http_request(relative_url, params)
 
-    # TODO: this doens't actually work; we need to send the file itself in the
-    # POST payload.
-    def file_upload(self, project_id, _file, file_format,
+    # file_name must be a file that can be read with open().  Allowed
+    # file_formats are listed in the documentation; I'm using GNU_POT a lot for
+    # testing.
+    def file_upload(self, project_id, file_name, file_format,
                     locale=None, is_keeping_all_strings=None):
         relative_url = 'projects/{}/files'.format(project_id)
-        params = {'file': _file, 'file_format': file_format, 'locale': locale,
+        params = {'file_format': file_format, 'locale': locale,
                   'is_keeping_all_strings': is_keeping_all_strings}
-        return self.do_http_request(relative_url, params, method='POST')
+
+        with open(file_name, 'rb') as file_stream:
+            return self.do_http_request(relative_url, params, method='POST',
+                                        file_stream=file_stream)
 
     def file_delete(self, project_id, file_name):
         relative_url = 'projects/{}/files'.format(project_id)

@@ -12,7 +12,10 @@ import client
 
 # helper to simplify the boilerplate wrapping all the API calls with command
 # processors.
-def make_cmd(name, required_parameters=[], optional_parameters=[]):
+def make_cmd(name,
+             required_parameters=[],
+             optional_parameters=[],
+             confirm=False):
     required_parameter_string = ''.join(
         [' <{}>'.format(param) for param in required_parameters])
     optional_parameter_string = ''.join(
@@ -35,9 +38,24 @@ def make_cmd(name, required_parameters=[], optional_parameters=[]):
             self.stdout.write(docstring + '\n')
             return
 
+        if confirm:
+            while True:
+                self.stdout.write('Are you sure? (y/N): ')
+                self.stdout.flush()
+                choice = raw_input().lower()
+                if choice == '' or choice == 'n' or choice == 'no':
+                    self.stdout.write('Canceled.\n')
+                    return
+                elif choice == 'y' or choice == 'yes':
+                    break
+
         client_function = getattr(self.client, name)
-        (status_code, response) = client_function(*parameters)
-        self.print_response(status_code, response)
+
+        try:
+            (status_code, response) = client_function(*parameters)
+            self.print_response(status_code, response)
+        except IOError as e:
+            self.stdout.write('IOError: {}\n'.format(e))
 
     wrapped.__doc__ = docstring
     return wrapped
@@ -92,7 +110,8 @@ class Interpreter(cmd.Cmd):
     do_project_group_show = make_cmd('project_group_show', ['id'])
     do_project_group_create = make_cmd('project_group_create',
                                        [], ['locale'])
-    do_project_group_delete = make_cmd('project_group_delete', ['id'])
+    do_project_group_delete = make_cmd('project_group_delete', ['id'],
+                                       confirm=True)
     do_project_group_languages = make_cmd('project_group_languages', ['id'])
 
     do_project_list = make_cmd('project_list', ['group_id'])
@@ -102,14 +121,18 @@ class Interpreter(cmd.Cmd):
                                  ['name', 'description'])
     do_project_update = make_cmd('project_update',
                                  [], ['name', 'description'])
-    do_project_delete = make_cmd('project_delete', ['id'])
+    do_project_delete = make_cmd('project_delete', ['id'], confirm=True)
     do_project_languages = make_cmd('project_languages', ['id'])
 
     do_project_type_list = make_cmd('project_type_list')
 
     do_file_list = make_cmd('file_list', ['project_id'], ['page', 'per_page'])
-    # do_file_upload =
-    do_file_delete = make_cmd('file_delete', ['project_id', 'file_name'])
+    do_file_upload = make_cmd('file_upload',
+                              ['project_id', 'file_name', 'file_format'],
+                              ['locale', 'is_keeping_all_strings'])
+
+    do_file_delete = make_cmd('file_delete', ['project_id', 'file_name'],
+                              confirm=True)
 
     # do_translation_export =
     do_translation_status = make_cmd('translation_status',

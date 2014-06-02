@@ -2,6 +2,7 @@
 import collections
 import hashlib
 import mock
+import os
 import requests
 import unittest
 
@@ -32,7 +33,7 @@ class ClientTestCase(unittest.TestCase):
 
     def execute_with_parameters(self, function_name,
                                 expected_method, expected_url,
-                                _parameters):
+                                _parameters, ignored_parameters=[]):
         callback_results = {}
 
         def callback(method, absolute_url, url_parameters):
@@ -74,6 +75,13 @@ class ClientTestCase(unittest.TestCase):
             self.assertEqual(callback_results.get('absolute_url'),
                              expected_absolute_url)
 
+            # anything in 'ignored_parameters' is not expected to show up in
+            # the URL variables.  this is the case for file uploads, where the
+            # file is uploaded as part of the POST payload.
+            for param in ignored_parameters:
+                if param in parameters:
+                    del parameters[param]
+
             # check the parameters.  we should have the correct API key, and
             # the hash should match the API secret based on the timestamp.
             result_params = callback_results.get('url_parameters')
@@ -98,25 +106,34 @@ class ClientTestCase(unittest.TestCase):
 
     def execute(self, function_name,
                 expected_method, expected_url,
-                required_parameters=[], optional_parameters=[]):
+                required_parameters=[], optional_parameters=[],
+                fixed_parameters={},
+                ignored_parameters=[]):
         # test with just the required parameters
-        parameters = collections.OrderedDict([
-            (p, 'param{}'.format(i))
-            for i, p in enumerate(required_parameters)
-        ])
+        parameters = collections.OrderedDict()
+        for i, p in enumerate(required_parameters):
+            if p in fixed_parameters:
+                parameters[p] = fixed_parameters[p]
+            else:
+                parameters[p] = 'param{}'.format(i)
+
         self.execute_with_parameters(function_name,
                                      expected_method, expected_url,
-                                     parameters)
+                                     parameters,
+                                     ignored_parameters=ignored_parameters)
 
         # now test with the optional parameters.  we aren't bothering to test
         # with some of the optional parameters, but we could.
-        parameters.update(collections.OrderedDict([
-            (p, 'optional_param{}'.format(i))
-            for i, p in enumerate(optional_parameters)
-        ]))
+        for i, p in enumerate(optional_parameters):
+            if p in fixed_parameters:
+                parameters[p] = fixed_parameters[p]
+            else:
+                parameters[p] = 'optional_param{}'.format(i)
+
         self.execute_with_parameters(function_name,
                                      expected_method, expected_url,
-                                     parameters)
+                                     parameters,
+                                     ignored_parameters=ignored_parameters)
 
     def test_project_group_list(self):
         self.execute('project_group_list',
@@ -187,8 +204,14 @@ class ClientTestCase(unittest.TestCase):
                      ['project_id'], ['page', 'per_page'])
 
     def test_file_upload(self):
-        # TODO: implement
-        pass
+        # must specify an actual file name that will be loaded
+        absfile = os.path.join(os.path.dirname(__file__), 'test_strings.pot')
+        self.execute('file_upload',
+                     'POST', 'projects/{}/files',
+                     ['project_id', 'file_name', 'file_format'],
+                     ['locale', 'is_keeping_all_strings'],
+                     {'file_name': absfile},
+                     ignored_parameters=['file_name'])
 
     def test_file_delete(self):
         self.execute('file_delete',
