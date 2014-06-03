@@ -65,7 +65,7 @@ files, set `download_dir` when creating your `Client` object (defaults
 to `'.'`).  The filename will also be set as a `downloaded_filename`
 key in the response.
 
-# Command-line interface
+## Command-line interface
 
 A simple command-line interface is also provided for testing your
 integration and running other simple tests of the API.  All of the
@@ -108,7 +108,7 @@ Response:
 onesky>
 ```
 
-# Unit Tests
+## Unit Tests
 
 To run the unit tests, you'll need the `nose` and `mock` libraries installed:
 ```
