@@ -1,4 +1,5 @@
 import hashlib
+import os
 import requests
 import time
 
@@ -10,10 +11,12 @@ DEFAULT_API_URL = 'https://platform.api.onesky.io/1/'
 class Client:
     def __init__(self, api_key, api_secret,
                  api_url=DEFAULT_API_URL,
+                 download_dir='.',
                  request_callback=None):
         self.api_url = api_url
         self.api_key = api_key
         self.api_secret = api_secret
+        self.download_dir = download_dir
         self.request_callback = request_callback
 
     def create_auth_variables(self):
@@ -30,7 +33,7 @@ class Client:
         }
 
     def do_http_request(self, relative_url, parameters=None, method='GET',
-                        file_stream=None):
+                        upload_file_stream=None):
         absolute_url = self.api_url + relative_url
 
         # the auth variables and any additional parameters are merged and
@@ -45,8 +48,8 @@ class Client:
                                    if v is not None])
         url_parameters.update(self.create_auth_variables())
 
-        if file_stream is not None:
-            files = {'file': file_stream}
+        if upload_file_stream is not None:
+            files = {'file': upload_file_stream}
         else:
             files = None
 
@@ -60,12 +63,32 @@ class Client:
                                     params=url_parameters,
                                     files=files)
 
-        # some requests (such as project_group_delete) don't return any
-        # response data, just the status code.
-        try:
-            response_dict = response.json()
-        except ValueError:
-            response_dict = {}
+        if (response.headers.get('content-disposition', '').
+                startswith('attachment:')):
+            # the response body is the contents of a file.  We save to a file
+            # here and return 'filename' in the response dictionary.
+
+            # the filename is in the 'content-disposition' header, in the form
+            # "attachment; filename=hi-IN.po".  simplest to just split on = to
+            # find it.
+            short_filename = (
+                response.headers['content-disposition'].split('=')[1]
+            )
+
+            absolute_filename = os.path.join(self.download_dir, short_filename)
+            with open(absolute_filename, 'wb') as f:
+                for chunk in response.iter_content():
+                    f.write(chunk)
+
+            response_dict = {'downloaded_filename': absolute_filename}
+        else:
+            # a json response is requested.  some requests (such as
+            # project_group_delete) don't return anything, so we'll just return
+            # an empty dictionary.
+            try:
+                response_dict = response.json()
+            except ValueError:
+                response_dict = {}
 
         return (response.status_code, response_dict)
 
@@ -148,7 +171,7 @@ class Client:
 
         with open(file_name, 'rb') as file_stream:
             return self.do_http_request(relative_url, params, method='POST',
-                                        file_stream=file_stream)
+                                        upload_file_stream=file_stream)
 
     def file_delete(self, project_id, file_name):
         relative_url = 'projects/{}/files'.format(project_id)
@@ -166,10 +189,10 @@ class Client:
         relative_url = 'projects/{}/translations'.format(project_id)
         params = {'locale': locale, 'source_file_name': source_file_name,
                   'export_file_name': export_file_name}
-        return self.do_http_request(relative_url, params, method='POST')
+        return self.do_http_request(relative_url, params)
 
     def translation_status(self, project_id, file_name, locale):
-        relative_url = 'projects/{}/translations'.format(project_id)
+        relative_url = 'projects/{}/translations/status'.format(project_id)
         params = {'file_name': file_name, 'locale': locale}
         return self.do_http_request(relative_url, params)
     ################################################################
@@ -191,6 +214,7 @@ class Client:
 
     # screenshot
     def screenshot_upload(self, project_id, screenshots):
+        # wrapper for the screenshot stuff is not yet implemented
         pass
 
     # quotation

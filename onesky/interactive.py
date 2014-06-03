@@ -134,7 +134,10 @@ class Interpreter(cmd.Cmd):
     do_file_delete = make_cmd('file_delete', ['project_id', 'file_name'],
                               confirm=True)
 
-    # do_translation_export =
+    do_translation_export = make_cmd(
+        'translation_export',
+        ['project_id', 'locale', 'source_file_name'],
+        ['export_file_name'])
     do_translation_status = make_cmd('translation_status',
                                      ['project_id', 'file_name', 'locale'])
     do_import_task_list = make_cmd('import_task_list',
@@ -143,6 +146,7 @@ class Interpreter(cmd.Cmd):
     do_import_task_show = make_cmd('import_task_show',
                                    ['project_id', 'import_id'])
 
+    # wrapper for the screenshot stuff is not yet implemented
     # do_screenshot =
 
     do_quotation_show = make_cmd('quotation_show',

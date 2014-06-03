@@ -13,16 +13,29 @@ TEST_API_KEY = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 TEST_API_SECRET = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
 
 
+# mock object to return a fake response from requests
+class MockResponse():
+    headers = requests.structures.CaseInsensitiveDict()
+    status_code = 200
+
+    def json(self):
+        return {}
+
+
+def mock_requests_function(*args, **kwargs):
+    return MockResponse()
+
+
 class ClientTestCase(unittest.TestCase):
     def setUp(self):
         # we mock out all of the http requests and just make sure the correct
         # urls and parameters and such are being passed.
         self.patcher = mock.patch.multiple(
             requests,
-            get=mock.DEFAULT,
-            post=mock.DEFAULT,
-            put=mock.DEFAULT,
-            delete=mock.DEFAULT)
+            get=mock_requests_function,
+            post=mock_requests_function,
+            put=mock_requests_function,
+            delete=mock_requests_function)
         self.patcher.start()
 
         self.client = onesky.client.Client(TEST_API_KEY, TEST_API_SECRET)
@@ -219,11 +232,14 @@ class ClientTestCase(unittest.TestCase):
                      ['project_id', 'file_name'])
 
     def test_translation_export(self):
-        pass
+        self.execute('translation_export',
+                     'GET', 'projects/{}/translations',
+                     ['project_id', 'locale', 'source_file_name'],
+                     ['export_file_name'])
 
     def test_translation_status(self):
         self.execute('translation_status',
-                     'GET', 'projects/{}/translations',
+                     'GET', 'projects/{}/translations/status',
                      ['project_id', 'file_name', 'locale'])
 
     def test_import_task_list(self):
@@ -237,6 +253,7 @@ class ClientTestCase(unittest.TestCase):
                      ['project_id', 'import_id'], [])
 
     def test_screenshot(self):
+        # wrapper for the screenshot stuff is not yet implemented
         pass
 
     def test_quotation_show(self):
