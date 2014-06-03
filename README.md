@@ -5,7 +5,9 @@ translations.  For the full documentation on the OneSky REST API, see
 https://github.com/onesky/api-documentation-platform.
 
 ## Installation
+```
 $ python setup.py install
+```
 
 Depending on your setup, you may need to run the above command with `sudo`.
 
