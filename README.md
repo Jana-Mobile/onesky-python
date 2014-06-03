@@ -1,3 +1,4 @@
+== onesky-python
 
 This is a simple python wrapper around the OneSky API for managing
 translations.  For the full documentation on the OneSky REST API, see
