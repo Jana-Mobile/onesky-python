@@ -1,15 +1,15 @@
-== onesky-python
+# onesky-python
 
 This is a simple python wrapper around the OneSky API for managing
 translations.  For the full documentation on the OneSky REST API, see
 https://github.com/onesky/api-documentation-platform.
 
-== Installation
+## Installation
 $ python setup.py install
 
 Depending on your setup, you may need to run the above command with `sudo`.
 
-== Getting Started—A Simple Example
+## Getting Started—A Simple Example
 
 Simply create a client using your API key.  Most of the methods return the JSON response from OneSky as a dictionary:
 
@@ -63,7 +63,7 @@ files, set `download_dir` when creating your `Client` object (defaults
 to `'.'`).  The filename will also be set as a `downloaded_filename`
 key in the response.
 
-== Command-line interface
+# Command-line interface
 
 A simple command-line interface is also provided for testing your
 integration and running other simple tests of the API.  All of the
@@ -106,7 +106,7 @@ Response:
 onesky>
 ```
 
-== Unit Tests
+# Unit Tests
 
 To run the unit tests, you'll need the `nose` and `mock` libraries installed:
 ```
