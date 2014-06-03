@@ -1,0 +1,8 @@
+msgid "test_string_1"
+msgstr "Globular Clusters"
+
+msgid "test_string_2"
+msgstr "Gaseous Nebulae"
+
+msgid "test_string_3"
+msgstr "Planetary Nebulae"

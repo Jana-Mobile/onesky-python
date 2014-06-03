@@ -1,0 +1,4 @@
+# need these additional libraries to run the unit tests. once they're
+# installed, run 'nosetests' from the python-onesky root directory.
+mock==1.0.1
+nose==1.3.3
