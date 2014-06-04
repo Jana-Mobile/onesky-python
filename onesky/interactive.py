@@ -109,7 +109,7 @@ class Interpreter(cmd.Cmd):
                                      [], ['page', 'per_page'])
     do_project_group_show = make_cmd('project_group_show', ['id'])
     do_project_group_create = make_cmd('project_group_create',
-                                       [], ['locale'])
+                                       ['name'], ['locale'])
     do_project_group_delete = make_cmd('project_group_delete', ['id'],
                                        confirm=True)
     do_project_group_languages = make_cmd('project_group_languages', ['id'])
