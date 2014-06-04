@@ -4,6 +4,11 @@ This is a simple python wrapper around the OneSky API for managing
 translations.  For the full documentation on the OneSky REST API, see
 https://github.com/onesky/api-documentation-platform.
 
+It's still pretty early/rough, so please let me know if you have any
+problems or suggestions!  I'm not sure I'm crazy about the methods
+returning (http status, dictionary) pairs, so I'm particularly open to
+suggestions there.  Perhaps throwing an exception for a bad http status?
+
 ## Installation
 ```
 $ python setup.py install
@@ -113,6 +118,6 @@ onesky>
 To run the unit tests, you'll need the `nose` and `mock` libraries installed:
 ```
 $ pip install mock nose
-$ cd /path/to/python-onesky
+$ cd /path/to/onesky-python
 $ nosetests
 ```
