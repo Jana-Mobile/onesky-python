@@ -21,7 +21,7 @@ import onesky.client
 client = onesky.client.Client(api_key='<your API key>',
                               api_secret='<your API secret>')
 
-status, project_groups = client.project_group_list()
+status, json_response = client.project_group_list()
 # {
 #   "meta": { "status": 200, "record_count": 2 },
 #   "data": [
@@ -30,7 +30,7 @@ status, project_groups = client.project_group_list()
 #   ]
 # }
 
-status, projects = client.project_list(365)
+status, json_response = client.project_list(365)
 # {
 #   "meta": { "status": 200, "record_count": 2, },
 #   "data": [
@@ -39,7 +39,7 @@ status, projects = client.project_list(365)
 #    ]
 # }
 
-status, project_info = client.project_show(6968)
+status, json_response = client.project_show(6968)
 # {
 #   "meta": { "status": 200 },
 #   "data": {

@@ -62,6 +62,10 @@ def make_cmd(name,
 
 
 class Interpreter(cmd.Cmd):
+    intro = (
+        '\nWelcome to the OneSky command-line interface! '
+        'Type {} for a list of commands.\n'.format(
+            termcolor.colored('help', 'yellow')))
     prompt = termcolor.colored('onesky> ', 'blue')
 
     def __init__(self, api_key, api_secret):
