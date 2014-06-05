@@ -257,7 +257,12 @@ class Client:
                      specialization=None,
                      note=None):
         relative_url = 'projects/{}/orders'.format(project_id)
-        params = {'files': str(files),
+
+        # NOTE: it looks like 'files' should be a comma-separate string,
+        # despite the documentation giving the example ['string.po'].  In other
+        # words, it should just be "string.po" or "string1.po,string2.po".  I
+        # know the former case works, anyway -- haven't yet tested the latter.
+        params = {'files': files,
                   'to_locale': to_locale,
                   'order_type': order_type,
                   'is_including_not_translated': is_including_not_translated,
