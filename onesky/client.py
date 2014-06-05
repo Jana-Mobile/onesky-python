@@ -64,7 +64,7 @@ class Client:
                                     files=files)
 
         if (response.headers.get('content-disposition', '').
-                startswith('attachment:')):
+                startswith('attachment;')):
             # the response body is the contents of a file.  We save to a file
             # here and return 'filename' in the response dictionary.
 
