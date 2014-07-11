@@ -10,11 +10,17 @@ returning (http status, dictionary) pairs, so I'm particularly open to
 suggestions there.  Perhaps throwing an exception for a bad http status?
 
 ## Installation
+Install using `pip`:
+```
+$ pip install onesky-python
+```
+
+Or, download the source code for `onesky-python`, and then run:
 ```
 $ python setup.py install
 ```
 
-Depending on your setup, you may need to run the above command with `sudo`.
+Depending on your setup, you may need to run the above commands with `sudo`.
 
 ## Getting Started—A Simple Example
 
