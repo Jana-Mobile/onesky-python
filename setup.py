@@ -15,5 +15,6 @@ setup(
         'termcolor==1.1.0'
     ],
     license='LICENSE.txt',
-    packages=['onesky']
+    packages=['onesky'],
+    url='https://github.com/Jana-Mobile/onesky-python'
 )
