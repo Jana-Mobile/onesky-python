@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='onesky-python',
-    version='1.0',
+    version='1.0.2',
     description='python wrapper for the OneSky REST API',
     author='Jana Mobile',
     author_email='technology@jana.com',
