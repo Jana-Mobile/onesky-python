@@ -184,9 +184,6 @@ class Client(object):
 
     ################################################################
     # translation
-
-    # TODO: this doesn't actually work; we need to get the file out of the
-    # payload that's returned.
     def translation_export(self, project_id, locale,
                            source_file_name, export_file_name=None):
         relative_url = 'projects/{}/translations'.format(project_id)
