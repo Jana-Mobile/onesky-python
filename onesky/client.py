@@ -8,14 +8,17 @@ DEFAULT_API_URL = 'https://platform.api.onesky.io/1/'
 
 # python wrapper for OneSky's REST API, see
 # https://github.com/onesky/api-documentation-platform
-class Client:
+class Client(object):
+
     def __init__(self, api_key, api_secret,
                  api_url=DEFAULT_API_URL,
+                 chunk_size=1,
                  download_dir='.',
                  request_callback=None):
         self.api_url = api_url
         self.api_key = api_key
         self.api_secret = api_secret
+        self.chunk_size = chunk_size
         self.download_dir = download_dir
         self.request_callback = request_callback
 
@@ -77,7 +80,7 @@ class Client:
 
             absolute_filename = os.path.join(self.download_dir, short_filename)
             with open(absolute_filename, 'wb') as f:
-                for chunk in response.iter_content():
+                for chunk in response.iter_content(chunk_size=self.chunk_size):
                     f.write(chunk)
 
             response_dict = {'downloaded_filename': absolute_filename}
@@ -181,9 +184,6 @@ class Client:
 
     ################################################################
     # translation
-
-    # TODO: this doesn't actually work; we need to get the file out of the
-    # payload that's returned.
     def translation_export(self, project_id, locale,
                            source_file_name, export_file_name=None):
         relative_url = 'projects/{}/translations'.format(project_id)

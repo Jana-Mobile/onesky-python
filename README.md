@@ -27,10 +27,10 @@ Depending on your setup, you may need to run the above commands with `sudo`.
 Simply create a client using your API key.  Most of the methods return the JSON response from OneSky as a dictionary:
 
 ```python
-import onesky.client
+from onesky import Client
 
-client = onesky.client.Client(api_key='<your API key>',
-                              api_secret='<your API secret>')
+client = Client(api_key='<your API key>',
+                api_secret='<your API secret>')
 
 status, json_response = client.project_group_list()
 # {
