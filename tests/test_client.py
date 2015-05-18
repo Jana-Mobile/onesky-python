@@ -6,7 +6,7 @@ import os
 import requests
 import unittest
 
-import onesky.client
+from onesky import Client
 
 
 TEST_API_KEY = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
@@ -27,6 +27,7 @@ def mock_requests_function(*args, **kwargs):
 
 
 class ClientTestCase(unittest.TestCase):
+
     def setUp(self):
         # we mock out all of the http requests and just make sure the correct
         # urls and parameters and such are being passed.
@@ -38,7 +39,7 @@ class ClientTestCase(unittest.TestCase):
             delete=mock_requests_function)
         self.patcher.start()
 
-        self.client = onesky.client.Client(TEST_API_KEY, TEST_API_SECRET)
+        self.client = Client(TEST_API_KEY, TEST_API_SECRET)
 
     def tearDown(self):
         del self.client
