@@ -8,7 +8,8 @@ DEFAULT_API_URL = 'https://platform.api.onesky.io/1/'
 
 # python wrapper for OneSky's REST API, see
 # https://github.com/onesky/api-documentation-platform
-class Client:
+class Client(object):
+
     def __init__(self, api_key, api_secret,
                  api_url=DEFAULT_API_URL,
                  chunk_size=1,
