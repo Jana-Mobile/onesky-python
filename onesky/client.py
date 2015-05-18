@@ -11,11 +11,13 @@ DEFAULT_API_URL = 'https://platform.api.onesky.io/1/'
 class Client:
     def __init__(self, api_key, api_secret,
                  api_url=DEFAULT_API_URL,
+                 chunk_size=1,
                  download_dir='.',
                  request_callback=None):
         self.api_url = api_url
         self.api_key = api_key
         self.api_secret = api_secret
+        self.chunk_size = chunk_size
         self.download_dir = download_dir
         self.request_callback = request_callback
 
@@ -77,7 +79,7 @@ class Client:
 
             absolute_filename = os.path.join(self.download_dir, short_filename)
             with open(absolute_filename, 'wb') as f:
-                for chunk in response.iter_content():
+                for chunk in response.iter_content(chunk_size=self.chunk_size):
                     f.write(chunk)
 
             response_dict = {'downloaded_filename': absolute_filename}
