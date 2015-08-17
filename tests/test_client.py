@@ -237,6 +237,12 @@ class ClientTestCase(unittest.TestCase):
                      ['project_id', 'locale', 'source_file_name'],
                      ['export_file_name'])
 
+    def test_translation_export_multilingual(self):
+        self.execute('translation_export_multilingual',
+                     'GET', 'projects/{}/translations/multilingual',
+                     ['project_id', 'source_file_name'],
+                     ['export_file_name', 'file_format'])
+
     def test_translation_status(self):
         self.execute('translation_status',
                      'GET', 'projects/{}/translations/status',
