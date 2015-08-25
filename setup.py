@@ -16,5 +16,5 @@ setup(
     ],
     license='LICENSE.txt',
     packages=['onesky'],
-    url='https://github.com/Jana-Mobile/onesky-python'
+    url='https://github.com/dubsmash/onesky-python'
 )

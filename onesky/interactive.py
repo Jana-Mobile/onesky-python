@@ -142,6 +142,11 @@ class Interpreter(cmd.Cmd):
         'translation_export',
         ['project_id', 'locale', 'source_file_name'],
         ['export_file_name'])
+    do_translation_export_multilingual = make_cmd(
+        'translation_export_multilingual',
+        ['project_id', 'source_file_name'],
+        ['export_file_name', 'file_format']
+    )
     do_translation_status = make_cmd('translation_status',
                                      ['project_id', 'file_name', 'locale'])
     do_import_task_list = make_cmd('import_task_list',

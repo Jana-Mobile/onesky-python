@@ -191,6 +191,14 @@ class Client:
                   'export_file_name': export_file_name}
         return self.do_http_request(relative_url, params)
 
+    def translation_export_multilingual(self, project_id, source_file_name, export_file_name=None,
+                                        file_format=None):
+        relative_url = 'projects/{}/translations/multilingual'.format(project_id)
+        params = {'source_file_name': source_file_name,
+                  'export_file_name': export_file_name,
+                  'file_format': file_format}
+        return self.do_http_request(relative_url, params)
+
     def translation_status(self, project_id, file_name, locale):
         relative_url = 'projects/{}/translations/status'.format(project_id)
         params = {'file_name': file_name, 'locale': locale}
