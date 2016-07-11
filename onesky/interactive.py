@@ -7,7 +7,7 @@ import termcolor
 import urllib
 import sys
 
-import client
+from onesky import client
 
 
 # helper to simplify the boilerplate wrapping all the API calls with command
