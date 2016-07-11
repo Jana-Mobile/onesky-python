@@ -23,8 +23,8 @@ class Client:
         timestamp = str(int(time.time()))
 
         dev_hash = hashlib.md5()
-        dev_hash.update(timestamp)
-        dev_hash.update(self.api_secret)
+        dev_hash.update(timestamp.encode('utf-8'))
+        dev_hash.update(self.api_secret.encode('utf-8'))
 
         return {
             'api_key': self.api_key,
