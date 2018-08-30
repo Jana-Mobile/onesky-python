@@ -15,12 +15,12 @@ class Client:
                  request_callback=None):
         self.api_url = api_url
         self.api_key = api_key
-        self.api_secret = api_secret
+        self.api_secret = api_secret.encode('utf-8')
         self.download_dir = download_dir
         self.request_callback = request_callback
 
     def create_auth_variables(self):
-        timestamp = str(int(time.time()))
+        timestamp = str(int(time.time())).encode('utf-8')
 
         dev_hash = hashlib.md5()
         dev_hash.update(timestamp)
