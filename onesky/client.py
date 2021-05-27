@@ -22,9 +22,8 @@ class Client:
     def create_auth_variables(self):
         timestamp = str(int(time.time()))
 
-        dev_hash = hashlib.md5()
-        dev_hash.update(timestamp)
-        dev_hash.update(self.api_secret)
+        hash_key = str(timestamp) + self.api_secret
+        dev_hash = hashlib.md5(bytes(hash_key, 'utf-8'))
 
         return {
             'api_key': self.api_key,
