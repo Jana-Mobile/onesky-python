@@ -2,3 +2,4 @@
 # installed, run 'nosetests' from the python-onesky root directory.
 mock==1.0.1
 nose==1.3.3
+pynose=1.4.8
